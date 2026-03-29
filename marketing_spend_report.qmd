@@ -1,0 +1,19 @@
+---
+title: "Assignment 1: Does Marketing Spend Drive Purchase Amounts?"
+author: "Inayat Gill (36880817)"
+format:
+  html: default
+  pdf: default
+---
+
+```{r setup}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(lubridate)
+library(knitr)
+library(scales) 
+
+```

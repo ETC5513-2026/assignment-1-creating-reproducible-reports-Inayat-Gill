@@ -32,3 +32,55 @@ I will be investigating the following questions:
 2. More specifically, I aim to examine whether there is a meaningful positive relationship between *marketing_spend* and *purchase_amount* across the 150 customers in this campaign. 
 
 3. I will also explore whether this relationship differs across customer segments (Consumer, SMB, and Enterprise), as different segment types might respond to marketing spend very differently.
+
+## Research Question
+
+The central question examined here is: **does higher per-customer marketing spend lead to higher purchase amounts?** More specifically, I want to know whether there is a meaningful positive relationship between `marketing_spend` and `purchase_amount` across the 150 customers in this campaign. I will also explore whether this relationship differs across customer segments (Consumer, SMB, and Enterprise), since different segment types might respond to marketing spend very differently.
+
+## Dataset Introduction
+
+The dataset records individual-level outcomes from a single quarter of a personalised marketing campaign. Each row represents one customer, capturing how much was spent reaching them and how much they ultimately purchased. The data was sourced from marketing campaign records and contains 150 customers with seven variables each.
+
+```{r}
+#| label: clean-data
+
+campaign_data_raw <- read_csv("data/36880817_Inayat Gill.csv")
+view(campaign_data_raw)
+
+```
+
+Before making any analysis, the data needs to be cleaned and be in a tidy format for easy and accurate interpretations. 
+
+```{r}
+
+campaign_data_filter <- campaign_data_raw |>
+  mutate(
+    signup_date_clean = parse_date_time(
+      signup_date,
+      orders = c("Ymd", "bdy", "dmY"),
+      quiet  = TRUE
+    )
+  ) |>
+  filter(
+    !is.na(signup_date_clean),  
+    !is.na(purchase_amount)      
+  ) |>
+  select(
+    customer_id,
+    signup_date  = signup_date_clean,
+    marketing_spend,
+    visits,
+    purchase_amount,
+    segment
+  )
+```
+
+The following changes were made to clean the data:
+
+- The `signup_date` column contained dates in three inconsistent formats (ISO `YYYY-MM-DD`, written `Mon DD, YYYY`, and `DD/MM/YYYY`), which were unified into a single date format using `lubridate::parse_date_time()`. 
+
+- The rows where `signup_date` could not be parsed were dropped. The rows having missing `purchase_amount` values (customers who did not make any purchase during the campaign period); were also filtered, as including them would distort the relationship between spend and purchase. 
+
+- The `notes` column — which contained sparse labels like "contacted" or "returned" — was not used in the analysis, as it was too incomplete to be analytically useful. 
+
+After cleaning, the dataset contained **123 complete observations** ready for analysis.

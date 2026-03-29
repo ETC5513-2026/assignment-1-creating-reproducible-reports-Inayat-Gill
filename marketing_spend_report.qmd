@@ -101,7 +101,7 @@ The variables are: a customer id, signup date, marketing spend (in dollars), num
 
 ```{r}
 #| label: tbl-summary
-#| tbl-cap: "Summary statistics for the three key numeric variables after cleaning."
+#| tbl-cap: Summary statistics for the three key numeric variables after cleaning.
 
 summary_table <- data.frame(
   Statistic = c("Min", "Median", "Mean", "Max", "SD"),
@@ -134,3 +134,21 @@ summary_table[, 2:4] <- round(summary_table[, 2:4], 2)
 kable(summary_table, align = "lrrr") |>
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
 ```
+
+Marketing spend ranged from just $1.30 to $299.61, showing that customers received very different levels of investment during the campaign. Purchase amounts followed a similar spread, from $0 to $318.92, with an average of around $135. On average, customers visited the site about 6 times, suggesting reasonable engagement across the board.
+
+```{r}
+#| label: fig-segment-dist
+#| fig-cap: "Distribution of marketing spend by customer segment"
+#| fig-width: 6
+#| fig-height: 4
+
+ggplot(campaign_data_filter, aes(x = segment, y = marketing_spend, fill = segment)) +
+  geom_boxplot() +
+  labs(
+    x = "Customer Segment",
+    y = "Marketing Spend (USD)"
+  )
+```
+
+@fig-segment-dist shows that marketing spend was distributed fairly broadly within each segment. Enterprise customers saw the widest variability, which makes sense given the fewer customers and more tailored outreach. Consumer and SMB segments received more uniform treatment. There is no obvious systematic difference in spend levels across the three groups, which is useful — it means spend variation is not simply a proxy for segment membership.

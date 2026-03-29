@@ -7,7 +7,8 @@ format:
 execute: 
   echo: false
   message: false
-  warning: false  
+  warning: false
+
 ---
 
 ```{r setup}
@@ -36,10 +37,6 @@ I will be investigating the following questions:
 2. More specifically, I aim to examine whether there is a meaningful positive relationship between *marketing_spend* and *purchase_amount* across the 150 customers in this campaign. 
 
 3. I will also explore whether this relationship differs across customer segments (Consumer, SMB, and Enterprise), as different segment types might respond to marketing spend very differently.
-
-## Research Question
-
-The central question examined here is: **does higher per-customer marketing spend lead to higher purchase amounts?** More specifically, I want to know whether there is a meaningful positive relationship between `marketing_spend` and `purchase_amount` across the 150 customers in this campaign. I will also explore whether this relationship differs across customer segments (Consumer, SMB, and Enterprise), since different segment types might respond to marketing spend very differently.
 
 ## Dataset Introduction
 
@@ -88,19 +85,19 @@ The following changes were made to clean the data:
 
 - The `notes` column — which contained sparse labels like "contacted" or "returned" — was not used in the analysis, as it was too incomplete to be analytically useful. 
 
-After cleaning, the dataset contained **123 complete observations** ready for analysis.
+After cleaning, the dataset contained **124 complete observations** ready for analysis.
 
 ### Dataset Description
+
 ```{r}
 #| label: dataset-size
 
-cat("The filtered number of observations are :", nrow(campaign_data_filter), "\n") 
-cat("The filtered number of variables are :", ncol(campaign_data_filter))
+n_obs  <- nrow(campaign_data_filter)
+n_vars <- ncol(campaign_data_filter)
 
-names(campaign_data_filter)
 ```
 
-After cleaning, the dataset contains 124 observations 6 variables. 
+After cleaning, the dataset contains `r n_obs` observations `r n_vars` variables. 
 The variables are: a customer id, signup date, marketing spend (in dollars), number of site visits, purchase amount (in dollars), and customer segment.
 
 ```{r}
@@ -147,6 +144,7 @@ Marketing spend ranged from just $1.30 to $299.61, showing that customers receiv
 #| fig-width: 6
 #| fig-height: 4
 
+
 ggplot(campaign_data_filter, aes(x = segment, y = marketing_spend, fill = segment)) +
   geom_boxplot() +
   labs(
@@ -191,11 +189,15 @@ ggplot(campaign_data_filter, aes(x = marketing_spend, y = purchase_amount, colou
 
 ```
 
+@fig-scatter shows that there is a positive relationship between marketing spend and purchase amount across the `r n_obs` customers in the dataset. The correlation between the two variables is **r = `r r_label`**, meaning that for every extra dollar spent on a customer, their purchase amount increased by around **`r slope`** (R² = `r r2`). This tells us that marketing spend does have a meaningful impact on how much customers spend.
+
+
 ```{r}
 #| label: fig-facet
 #| fig-cap: Scatter plots of marketing spend versus purchase amount, split by customer segment
 #| fig-width: 8
 #| fig-height: 4
+
 ggplot(campaign_data_filter, aes(x = marketing_spend, y = purchase_amount, colour = segment)) +
   geom_point() +
   geom_smooth(method = "lm", se = TRUE, linewidth = 0.8) +
@@ -210,3 +212,6 @@ ggplot(campaign_data_filter, aes(x = marketing_spend, y = purchase_amount, colou
 
 ```
 
+@fig-facet breaks this down by segment. The positive trend is clear for Consumer and SMB customers, who make up most of the data. For Enterprise customers the relationship looks weaker, but this is likely because there are only 13 Enterprise customers in the dataset — too few to draw strong conclusions.
+
+Taken together, the evidence suggests the answer to the research question is **yes**: higher marketing spend per customer does tend to be associated with higher purchase amounts in this campaign. The relationship is not perfect — there is substantial scatter around the trend line, reflecting other factors (customer intent, browsing behaviour, prior relationship with the brand) that also drive purchasing. But the direction of the effect is consistent and practically meaningful: customers who received higher spend produced, on average, larger purchases.

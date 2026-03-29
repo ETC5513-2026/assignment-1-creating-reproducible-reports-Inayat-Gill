@@ -43,8 +43,9 @@ The dataset records individual-level outcomes from a single quarter of a persona
 
 ```{r}
 #| label: clean-data
+#| echo: false
 
-campaign_data_raw <- read_csv("data/36880817_Inayat Gill.csv")
+campaign_data_raw <- read_csv("data/36880817_Inayat Gill.csv", show_col_types = FALSE)
 view(campaign_data_raw)
 
 ```
@@ -52,7 +53,7 @@ view(campaign_data_raw)
 Before making any analysis, the data needs to be cleaned and be in a tidy format for easy and accurate interpretations. 
 
 ```{r}
-
+#| echo: false
 campaign_data_filter <- campaign_data_raw |>
   mutate(
     signup_date_clean = parse_date_time(
@@ -84,3 +85,16 @@ The following changes were made to clean the data:
 - The `notes` column — which contained sparse labels like "contacted" or "returned" — was not used in the analysis, as it was too incomplete to be analytically useful. 
 
 After cleaning, the dataset contained **123 complete observations** ready for analysis.
+
+### Dataset Description
+```{r}
+#| label: dataset-size
+
+cat("The filtered number of observations are :", nrow(campaign_data_filter), "\n") 
+cat("The filtered number of variables are :", ncol(campaign_data_filter))
+
+names(campaign_data_filter)
+```
+
+After cleaning, the dataset contains 124 observations 6 variables. 
+The variables are: a customer id, signup date, marketing spend (in dollars), number of site visits, purchase amount (in dollars), and customer segment.

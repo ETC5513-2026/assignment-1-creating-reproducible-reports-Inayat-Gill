@@ -4,6 +4,10 @@ author: "Inayat Gill (36880817)"
 format:
   html: default
   pdf: default
+execute: 
+  echo: false
+  message: false
+  warning: false  
 ---
 
 ```{r setup}
@@ -42,8 +46,7 @@ The central question examined here is: **does higher per-customer marketing spen
 The dataset records individual-level outcomes from a single quarter of a personalised marketing campaign. Each row represents one customer, capturing how much was spent reaching them and how much they ultimately purchased. The data was sourced from marketing campaign records and contains 150 customers with seven variables each.
 
 ```{r}
-#| label: clean-data
-#| echo: false
+#| label: data-fetching
 
 campaign_data_raw <- read_csv("data/36880817_Inayat Gill.csv", show_col_types = FALSE)
 view(campaign_data_raw)
@@ -53,7 +56,8 @@ view(campaign_data_raw)
 Before making any analysis, the data needs to be cleaned and be in a tidy format for easy and accurate interpretations. 
 
 ```{r}
-#| echo: false
+#| label: clean-data
+
 campaign_data_filter <- campaign_data_raw |>
   mutate(
     signup_date_clean = parse_date_time(
@@ -148,7 +152,61 @@ ggplot(campaign_data_filter, aes(x = segment, y = marketing_spend, fill = segmen
   labs(
     x = "Customer Segment",
     y = "Marketing Spend (USD)"
-  )
+  ) +
+     theme_minimal(base_size = 13) +
+  theme(legend.position = "none")
 ```
 
 @fig-segment-dist shows that marketing spend was distributed fairly broadly within each segment. Enterprise customers saw the widest variability, which makes sense given the fewer customers and more tailored outreach. Consumer and SMB segments received more uniform treatment. There is no obvious systematic difference in spend levels across the three groups, which is useful — it means spend variation is not simply a proxy for segment membership.
+
+## Results
+
+```{r}
+#| label: compute-correlation
+
+r_label <- round(cor(campaign_data_filter$marketing_spend, campaign_data_filter$purchase_amount), 2)
+
+# Linear regression
+fit    <- lm(purchase_amount ~ marketing_spend, data = campaign_data_filter)
+slope  <- round(coef(fit)[2], 2)
+r2     <- round(summary(fit)$r.squared, 3)
+```
+
+```{r}
+#| label: fig-scatter
+#| fig-cap: Relationship between per-customer marketing spend and purchase amount.
+#| fig-width: 7
+#| fig-height: 5
+
+ggplot(campaign_data_filter, aes(x = marketing_spend, y = purchase_amount, colour = segment)) +
+  geom_point() +
+    geom_smooth(method = "lm", se = TRUE, colour = "grey30", linewidth = 0.9) +
+  labs(
+    x      = "Marketing Spend (USD)",
+    y      = "Purchase Amount (USD)",
+    colour = "Segment"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "bottom")
+
+```
+
+```{r}
+#| label: fig-facet
+#| fig-cap: Scatter plots of marketing spend versus purchase amount, split by customer segment
+#| fig-width: 8
+#| fig-height: 4
+ggplot(campaign_data_filter, aes(x = marketing_spend, y = purchase_amount, colour = segment)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE, linewidth = 0.8) +
+  facet_wrap(~ segment) +
+  labs(
+    x      = "Marketing Spend (USD)",
+    y      = "Purchase Amount (USD)",
+    colour = "Segment"
+  ) +
+     theme_minimal(base_size = 12) +
+  theme(legend.position = "none")
+
+```
+

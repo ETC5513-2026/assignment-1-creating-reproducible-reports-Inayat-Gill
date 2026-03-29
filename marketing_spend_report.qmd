@@ -98,3 +98,39 @@ names(campaign_data_filter)
 
 After cleaning, the dataset contains 124 observations 6 variables. 
 The variables are: a customer id, signup date, marketing spend (in dollars), number of site visits, purchase amount (in dollars), and customer segment.
+
+```{r}
+#| label: tbl-summary
+#| tbl-cap: "Summary statistics for the three key numeric variables after cleaning."
+
+summary_table <- data.frame(
+  Statistic = c("Min", "Median", "Mean", "Max", "SD"),
+  Marketing_Spend= c(
+    min(campaign_data_filter$marketing_spend),
+    median(campaign_data_filter$marketing_spend),
+    mean(campaign_data_filter$marketing_spend),
+    max(campaign_data_filter$marketing_spend),
+    sd(campaign_data_filter$marketing_spend)
+  ),
+  Site_Visits = c(
+    min(campaign_data_filter$visits),
+    median(campaign_data_filter$visits),
+    mean(campaign_data_filter$visits),
+    max(campaign_data_filter$visits),
+    sd(campaign_data_filter$visits)
+  ),
+  Purchase_Amount = c(
+    min(campaign_data_filter$purchase_amount),
+    median(campaign_data_filter$purchase_amount),
+    mean(campaign_data_filter$purchase_amount),
+    max(campaign_data_filter$purchase_amount),
+    sd(campaign_data_filter$purchase_amount)
+  ))
+
+# Round all numbers to 2 decimal places
+summary_table[, 2:4] <- round(summary_table[, 2:4], 2)
+
+# Display as a table
+kable(summary_table, align = "lrrr") |>
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```

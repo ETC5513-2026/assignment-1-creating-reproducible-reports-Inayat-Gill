@@ -17,3 +17,7 @@ library(knitr)
 library(scales) 
 
 ```
+
+## Introduction 
+
+Every quarter, marketing teams face the same critical question: is our spending actually working? This report looks at a personalised campaign by an online retailer, where each customer received a different level of spend through ads, emails, and coupons. The goal is to understand whether spending more on a customer leads to bigger purchases. This helps the business decide where to invest its budget next quarter, rather than treating every customer the same.

@@ -12,9 +12,6 @@ execute:
 ---
 
 ```{r setup}
-#| echo: false
-#| message: false
-#| warning: false
 
 library(tidyverse)
 library(lubridate)
@@ -46,9 +43,10 @@ The dataset records individual-level outcomes from a single quarter of a persona
 #| label: data-fetching
 
 campaign_data_raw <- read_csv("data/36880817_Inayat Gill.csv", show_col_types = FALSE)
-view(campaign_data_raw)
 
 ```
+
+### Data Cleaning
 
 Before making any analysis, the data needs to be cleaned and be in a tidy format for easy and accurate interpretations. 
 
@@ -97,7 +95,7 @@ n_vars <- ncol(campaign_data_filter)
 
 ```
 
-After cleaning, the dataset contains `r n_obs` observations `r n_vars` variables. 
+After cleaning, the dataset contains `r n_obs` observations and `r n_vars` variables. 
 The variables are: a customer id, signup date, marketing spend (in dollars), number of site visits, purchase amount (in dollars), and customer segment.
 
 ```{r}
@@ -140,7 +138,7 @@ Marketing spend ranged from just $1.30 to $299.61, showing that customers receiv
 
 ```{r}
 #| label: fig-segment-dist
-#| fig-cap: "Distribution of marketing spend by customer segment"
+#| fig-cap: Distribution of marketing spend by customer segment
 #| fig-width: 6
 #| fig-height: 4
 
@@ -172,7 +170,7 @@ r2     <- round(summary(fit)$r.squared, 3)
 
 ```{r}
 #| label: fig-scatter
-#| fig-cap: Relationship between per-customer marketing spend and purchase amount.
+#| fig-cap: Relationship between per-customer marketing spend and purchase amount
 #| fig-width: 7
 #| fig-height: 5
 
@@ -214,4 +212,4 @@ ggplot(campaign_data_filter, aes(x = marketing_spend, y = purchase_amount, colou
 
 @fig-facet breaks this down by segment. The positive trend is clear for Consumer and SMB customers, who make up most of the data. For Enterprise customers the relationship looks weaker, but this is likely because there are only 13 Enterprise customers in the dataset — too few to draw strong conclusions.
 
-Taken together, the evidence suggests the answer to the research question is **yes**: higher marketing spend per customer does tend to be associated with higher purchase amounts in this campaign. The relationship is not perfect — there is substantial scatter around the trend line, reflecting other factors (customer intent, browsing behaviour, prior relationship with the brand) that also drive purchasing. But the direction of the effect is consistent and practically meaningful: customers who received higher spend produced, on average, larger purchases.
+**Taken together**, the evidence suggests the answer to the research question is **yes**: higher marketing spend per customer does tend to be associated with higher purchase amounts in this campaign. The relationship is not perfect — there is substantial scatter around the trend line, reflecting other factors (customer intent, browsing behaviour, prior relationship with the brand) that also drive purchasing. But the direction of the effect is consistent and practically meaningful: customers who received higher spend produced, on average, larger purchases.

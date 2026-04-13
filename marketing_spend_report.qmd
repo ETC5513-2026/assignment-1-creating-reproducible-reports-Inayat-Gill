@@ -8,7 +8,6 @@ execute:
   echo: false
   message: false
   warning: false
-
 ---
 
 ```{r setup}
@@ -17,6 +16,7 @@ library(tidyverse)
 library(lubridate)
 library(knitr)
 library(scales) 
+library(kableExtra)  
 
 ```
 
@@ -100,7 +100,7 @@ The variables are: a customer id, signup date, marketing spend (in dollars), num
 
 ```{r}
 #| label: tbl-summary
-#| tbl-cap: Summary statistics for the three key numeric variables after cleaning.
+#| tbl-cap: "Summary statistics for the three key numeric variables after cleaning"
 
 summary_table <- data.frame(
   Statistic = c("Min", "Median", "Mean", "Max", "SD"),
@@ -131,14 +131,18 @@ summary_table[, 2:4] <- round(summary_table[, 2:4], 2)
 
 # Display as a table
 kable(summary_table, align = "lrrr") |>
-  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover"),  
+    latex_options = c("striped"),               
+    full_width = FALSE
+  )
 ```
 
 Marketing spend ranged from just $1.30 to $299.61, showing that customers received very different levels of investment during the campaign. Purchase amounts followed a similar spread, from $0 to $318.92, with an average of around $135. On average, customers visited the site about 6 times, suggesting reasonable engagement across the board.
 
 ```{r}
 #| label: fig-segment-dist
-#| fig-cap: Distribution of marketing spend by customer segment
+#| fig-cap: "Distribution of marketing spend by customer segment"
 #| fig-width: 6
 #| fig-height: 4
 
@@ -170,7 +174,7 @@ r2     <- round(summary(fit)$r.squared, 3)
 
 ```{r}
 #| label: fig-scatter
-#| fig-cap: Relationship between per-customer marketing spend and purchase amount
+#| fig-cap: "Relationship between per-customer marketing spend and purchase amount"
 #| fig-width: 7
 #| fig-height: 5
 
@@ -192,7 +196,7 @@ ggplot(campaign_data_filter, aes(x = marketing_spend, y = purchase_amount, colou
 
 ```{r}
 #| label: fig-facet
-#| fig-cap: Scatter plots of marketing spend versus purchase amount, split by customer segment
+#| fig-cap: "Scatter plots of marketing spend versus purchase amount, split by customer segment"
 #| fig-width: 8
 #| fig-height: 4
 
